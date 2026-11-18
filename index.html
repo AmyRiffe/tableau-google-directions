@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Get Google Maps Directions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Getting your directions...</h2>
+  <p id="message">Please allow access to your location when prompted.</p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const lat = params.get("lat");
+    const lon = params.get("lon");
+
+    const message = document.getElementById("message");
+
+    if (!lat || !lon || !Number.isFinite(Number(lat)) ||
+        !Number.isFinite(Number(lon))) {
+      message.textContent = "Sorry, the destination coordinates are missing.";
+    } else if (!navigator.geolocation) {
+      message.textContent = "Your browser does not support location services.";
+    } else {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+
+          const url =
+            "https://www.google.com/maps/dir/?api=1" +
+            "&origin=" + userLat + "," + userLon +
+            "&destination=" + encodeURIComponent(lat + "," + lon) +
+            "&travelmode=driving";
+
+          window.location.href = url;
+        },
+        function(error) {
+          message.textContent =
+            "We couldn't access your location. Please allow location access and try again.";
+        },
+        { enableHighAccuracy: true, timeout: 15000 }
+      );
+    }
+  </script>
+</body>
+</html>
