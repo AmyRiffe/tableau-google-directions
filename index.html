@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Check My Location</title>
+  <title>Location Accuracy Test</title>
 </head>
 <body style="font-family: Arial; padding: 30px;">
-  <h2>Checking your location</h2>
-  <p id="message">Please wait...</p>
+  <h2>Checking your current location...</h2>
+  <p id="message">Please wait while we request a fresh location.</p>
 
   <script>
     const message = document.getElementById("message");
@@ -14,17 +14,20 @@
     navigator.geolocation.getCurrentPosition(
       function(position) {
         message.innerHTML =
-          "Your detected location:<br><br>" +
+          "<h3>Your detected location</h3>" +
           "Latitude: " + position.coords.latitude +
           "<br>Longitude: " + position.coords.longitude +
           "<br><br>Accuracy: " +
           position.coords.accuracy + " meters";
       },
       function(error) {
-        message.textContent =
-          "Location error: " + error.message;
+        message.textContent = "Location error: " + error.message;
       },
-      { enableHighAccuracy: true, timeout: 15000 }
+      {
+        enableHighAccuracy: true,
+        timeout: 30000,
+        maximumAge: 0
+      }
     );
   </script>
 </body>
